@@ -1,0 +1,12 @@
+Step 5 inputs: input 5 total votes, and give each candidate 5 votes 
+gives both candidates 100% chance of winning (according to the program)
+
+logic_eror.cpp has error at line 30 
+which causes result to saw Hillary is predicted to win when she has less votes than Donald
+(and vice versa)
+
+compile_error.cpp has errors at 9 and 13
+9: typo 'int' as 'it'
+13: >> instead of << for cout << "blablabla"
+Visual Studio 2016's compiler simply refused to compile and asked if I wanted to run the previous working build:
+"There were build errors. Would you like to continue and run the latest successful build?"

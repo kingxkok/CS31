@@ -1,0 +1,272 @@
+a. Obstacles overcame:
+segmentation faults
+when removing blank strings and copying strings further on over, 
+the indeces got messed up when I copied over 
+the next string into a blank string every time I found a blank spot, 
+so instead I changed my method into tracking how many blanks found 
+and copying every string into its original index minus the blanks found
+
+
+
+b. Description of program:
+
+int normalizeRules(char word1[][MAX_WORD_LENGTH+1],
+                   char word2[][MAX_WORD_LENGTH+1],
+                   int distance[],
+                   int nRules);
+{
+Turn all alphabets in word1 and word2 to lower case:
+	Go through every char array in word1 and word2
+		For each word, go through all its chars before termination byte 
+		and turn them to lower case
+Make sure every word in word1 <= its pair (to remove duplicates more easily)
+	(Run through all word pairs, if word1 > word2 then swap)
+
+Remove duplicates by adding to new arrays 
+	(copy over the first instances of any word pairs that are all alphabets 
+		(check with isAllAlpha helper function), tracking how many pairs have been copied
+	and replace distance number if newfound duplicate has greater distance)
+
+	used helper function distanceFunc() to check if pairs already exist in copied arrays 
+		and if not, copy them over, 
+		and if they do, replace the old distance if new one is bigger
+
+	copy back the copied pairs and distances to original arrays
+
+return number of copies made
+}
+
+// //Implementation of isAllAlpha function
+// bool isAllAlpha(char word[])
+// 	runs through all chars in word[]
+// 		and returns false if it finds a non-alphabet;
+// 	returns true (if no non-alphas found);
+// //End of isAllAlpha implementation
+
+// //Implmentation of distance function
+//
+// 	int distanceFunc(char word1[], char word2[], 
+// 			char word1List[][MAX_WORD_LENGTH+1], 
+// 			char word2List[][MAX_WORD_LENGTH+1], int distance[],
+// 			int nRules, int& index)
+// 		looks for an instance of word1 in word1list and mark its index
+// 			and if word2 is found in word2list at same index, returns their distance
+// 				and if not find the next instance of word1 and repeat until list is exhausted
+// 		and then returns -1;
+//
+//  //End of implementation of distanceFunc()
+
+
+
+
+int calculateSatisfaction(const char word1[][MAX_WORD_LENGTH+1],
+                          const char word2[][MAX_WORD_LENGTH+1],
+                          const int distance[],
+                          int nRules,
+                          const char document[])
+{
+Copy document into an array of c-strings:
+	Create a 201*201 c-string array 
+	loop through the entire document array (until 0 byte)
+		if an alphabet is found, add its lower case form to current word
+		if space is found, increment the wordIndex 
+		(and reset letter index to 0)
+	remove the empty or whitespace only strings (including tabs) 
+		by copying over the next real word into the blank index 
+			(have two indeces, one to copy to and one to copy from)
+	
+for each word in document, check if word is in list1, and note its index
+	if exist then check if document is, at anywhere from 
+	  index-distance to index+distance, skipping index itself,
+	  the corresponding list2 word
+	if word2 is found within range, mark that rule as satisfied 
+	(by turning a false into true in a boolean array, of length nRules)
+
+Calculate satisfaction by incrementing a running total of satisfied rules
+for every true found in the boolean array
+and return this value
+}
+
+
+
+
+
+
+c. Test cases:
+
+
+normalizeRules():
+{
+    const int TEST1_NRULES = 7;
+    char test1w1[TEST1_NRULES][MAX_WORD_LENGTH+1] = {
+        "mad",       "derAnGed", "nefar-ious", "h ave",	 "mad",	"henises", "harAMbe"
+    };
+    char test1w2[TEST1_NRULES][MAX_WORD_LENGTH+1] = {
+        "scientist",  "robot",    "plot",      "mad",	 "mad",	"hArambe", "henises"
+    };
+    int test1dist[TEST1_NRULES] = {
+        2,           -4,          1,           0, 	  6,	14, 	  	12
+    };
+    
+    cout << normalizeRules(test1w1, test1w2, test1dist, TEST1_NRULES) << endl;
+  
+  for(int i = 0; i < TEST1_NRULES; i++){
+    	cout << test1w1[i] << "	" << test1w2[i] << "	" << test1dist[i] << endl;
+    }
+} //has dash, same words in pair, same pairs but different order, 
+  //capitalizations, 0 and negative distances
+
+{
+    const int TEST1_NRULES = 7;
+    char test1w1[TEST1_NRULES][MAX_WORD_LENGTH+1] = {
+        "mad",       "deranged", "nefar-ious", "h ave",	 "mad",	"henises", "harAMbe"
+    };
+    char test1w2[TEST1_NRULES][MAX_WORD_LENGTH+1] = {
+        "scientist",  "robot",    "plot",      "mad",	 "mad",	"hArambe", "henises"
+    };
+    int test1dist[TEST1_NRULES] = {
+        2,           4,          1,           13, 6,14, 12
+    };
+    
+    cout << normalizeRules(test1w1, test1w2, test1dist, TEST1_NRULES-2 /*<-SEE HERE*/) << endl;
+  
+  for(int i = 0; i < TEST1_NRULES; i++){
+    	cout << test1w1[i] << "	" << test1w2[i] << "	" << test1dist[i] << endl;
+    }
+} //only considers parts of the arrays
+
+{
+    const int TEST1_NRULES = 7;
+    char test1w1[TEST1_NRULES][MAX_WORD_LENGTH+1] = {
+        "mad",       "deranged", "nefar-ious", "h ave",	 "mad",	"henises", "harAMbe"
+    };
+    char test1w2[TEST1_NRULES][MAX_WORD_LENGTH+1] = {
+        "scientist",  "robot",    "plot",      "mad",	 "mad",	"hArambe", "henises"
+    };
+    int test1dist[TEST1_NRULES] = {
+        2,           4,          1,           13, 6,14, 12
+    };
+    
+    cout << normalizeRules(test1w1, test1w2, test1dist, 0) << endl;
+  
+  for(int i = 0; i < TEST1_NRULES; i++){
+    	cout << test1w1[i] << "	" << test1w2[i] << "	" << test1dist[i] << endl;
+    }
+} //0 nRules
+
+
+{
+    const int TEST1_NRULES = 7;
+    char test1w1[TEST1_NRULES][MAX_WORD_LENGTH+1] = {
+        "mad",       "deranged", "nefar-ious", "h ave",	 "mad",	"henises", "harAMbe"
+    };
+    char test1w2[TEST1_NRULES][MAX_WORD_LENGTH+1] = {
+        "scientist",  "robot",    "plot",      "mad",	 "mad",	"hArambe", "henises"
+    };
+    int test1dist[TEST1_NRULES] = {
+        2,           4,          1,           13, 6,14, 12
+    };
+    
+    cout << normalizeRules(test1w1, test1w2, test1dist, -4) << endl;
+  
+  for(int i = 0; i < TEST1_NRULES; i++){
+    	cout << test1w1[i] << "	" << test1w2[i] << "	" << test1dist[i] << endl;
+    }
+} //negative nRules
+
+
+
+
+
+caculateSatisfaction():
+
+{
+	string separator = "!@#$^&*()";
+    	const int TEST1_NRULES = 4;
+
+            char test1w1[TEST1_NRULES][MAX_WORD_LENGTH+1] = {
+                "mad",       "deranged", "nefarious", "have"
+            };
+            char test1w2[TEST1_NRULES][MAX_WORD_LENGTH+1] = {
+                "scientist", "robot",    "plot",      "mad"
+            };
+            int test1dist[TEST1_NRULES] = {
+                2,           4,          1,           13
+            };
+
+            assert(calculateSatisfaction(test1w1, test1w2, test1dist, TEST1_NRULES,
+                "The mad UCLA scientist unleashed a deranged evil giant roBOt.") == 2);
+            cout << separator << endl;
+            assert(calculateSatisfaction(test1w1, test1w2, test1dist, TEST1_NRULES,
+                "The mad UCLA scientist unlea--shed    a deRANged robot.") == 2);
+            cout << separator << endl;
+            assert(calculateSatisfaction(test1w1, test1w2, test1dist, TEST1_NRULES,
+                "**** 2016 ****") == 0);
+            cout << separator << endl;
+            assert(calculateSatisfaction(test1w1, test1w2, test1dist, TEST1_NRULES,
+                "  That plot: NEFARIOUS!") == 1);
+            cout << separator << endl;
+            assert(calculateSatisfaction(test1w1, test1w2, test1dist, TEST1_NRULES,
+                "deranged deranged robot deranged robot robot") == 2);
+            cout << separator << endl;
+            assert(calculateSatisfaction(test1w1, test1w2, test1dist, TEST1_NRULES,
+                "That scientist said two mad scientists suffer from deranged -robot fever.") == 1);
+            
+            cout << "All tests succeeded" << endl;
+
+   
+   return 0;
+} //relatively normal tests, some capitalizations, some dashes
+
+int main()
+{
+	string separator = "!@#$^&*()";
+    const int TEST1_NRULES = 5;
+            char test1w1[TEST1_NRULES][MAX_WORD_LENGTH+1] = {
+                "mad",       "deranged", "nefarious", "have", "robot"
+            };
+            char test1w2[TEST1_NRULES][MAX_WORD_LENGTH+1] = {
+                "scientist", "robot",    "plot",      "mad", "robot"
+            };
+            int test1dist[TEST1_NRULES] = {
+                2,           4,          1,           13, 3
+            };
+            assert(calculateSatisfaction(test1w1, test1w2, test1dist, TEST1_NRULES,
+                "The mad UCLA !#$#@#$%;;;scientist unleashed a deranged evil giant robot.") == 2);
+            cout << separator << endl;
+            assert(calculateSatisfaction(test1w1, test1w2, test1dist, TEST1_NRULES,
+                "The mad UCLA scientist !!!!!!!!!!!!un********leashed    a deranged robot.") == 2);
+            cout << separator << endl;
+            assert(calculateSatisfaction(test1w1, test1w2, test1dist, TEST1_NRULES,
+                "**** 2016 ****") == 0);
+            cout << separator << endl;
+            assert(calculateSatisfaction(test1w1, test1w2, test1dist, TEST1_NRULES,
+                "  That plot: NEFAR*&^%$^#%I*&^%$OUS!") == 1);
+            cout << separator << endl;
+            assert(calculateSatisfaction(test1w1, test1w2, test1dist, TEST1_NRULES,
+                "lolololololol [d[E[r[a[n[g[e[d[ [d[e[r[a[ng[ed[ [r[o[bo[t[ [d[e[r[a[n[g[e[d[ [r[o[b[o[[t[ [robot[d[e[r[a[n[g[e[d[ [d[e[r[a[ng[ed[ [r[o[bo[t[ [d[e[r[a[n[g[e[d[ [r[o[b[o[[t[ [robot lolololololololololol") == 2);
+            		//^200 chars not including 0-byte
+		    cout << separator << endl;
+		    assert(calculateSatisfaction(test1w1, test1w2, test1dist, TEST1_NRULES,
+                "l l l l l l l [ [ [ [ [ [ [ [ [ [ [ [ [ [ g e [ [ [ [ o t s [ d [ e [ r [ a [ n [ g [ e r [ o [ b [ o [ [ t [ [ r o b o t [ d [ e [ r [ a [ n [ g e [ d [ t l o l o l o l o l o l o l o l o l o l o l g ") == 0);
+            		//^200 chars not including 0-byte, also has a max words possible
+		    cout << separator << endl;
+		    assert(calculateSatisfaction(test1w1, test1w2, test1dist, TEST1_NRULES,
+                "lalalalalalalababababababababababababababagaeababababaoatasabadabaeabarabaaabanabagabaearabaoabababaoababatababaraoabaoatabadabaeabarabaaabanabagaeabadabatalaoalaoalaoalaoalaoalaoalaoalaoalaoalaoalaga") == 0);
+            		//^200 characters, all alphabets
+		    cout << separator << endl;
+            assert(calculateSatisfaction(test1w1, test1w2, test1dist, TEST1_NRULES,
+                "ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha ha That scientist said two mad scientists suffer from deranged -robot fever.") ==1);
+		//^210 words; idk why it works but it does on codechef.com... is undefined behaviour, though
+            cout << "All tests succeeded" << endl;
+
+   
+   return 0;
+
+} //test with pair of same words, and some cool characters for the function to ignore
+  //some long strings (both many words and long word)
+
+
+
+
+

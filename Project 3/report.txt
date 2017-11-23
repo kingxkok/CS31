@@ -1,0 +1,118 @@
+﻿a) Obstacles Overcame:
+
+struggled with checking 0 votes case as it could be 00
+initially tried to check the string directly but found that converting the votes to int first and then checking if it was 0 was easier and more efficient since I would have to convert it later on anyway (had I checked for zero by parsing straight from the string).
+
+kind of an obstacle: reading the tech spec carefully enough and seeing the things I could assume, couldn’t assume, needed to watch out for (overcame by reading as I programmed and checking back to the spec frequently)
+
+related to reading carefully and noticing things: prevent the validity function from experiencing an error/doing undefined behavior for strings that end with an incomplete state forecast (overcame by checking if there are enough characters left to analyze before analyzing to prevent indexOutOfBound exceptions); notice we are instructed to set voteCount’s value based on total electoral votes (of that party), not add to it; several other little examples of the value of being careful, observant, starting early so that there is time to check, etc
+
+b) Process: 
+
+I dived immediately into the two central functions, and then realized/noticed the helper functions I may need. I implemented those helper functions and then returned to the two explicitly tasked functions.
+
+modified isValidUpperCaseStateCode -> isValidStateCode so it returns true for both upper and lower case:
+   turn the input string stateCode into all uppercase letters, then
+   do what isValidUpperCaseStateCode does
+   (returns true if input string is a valid state code)
+
+
+then I created
+hasCorrectSyntax(string pollData){
+
+   takes in a string
+
+   repeatedly:{
+      (repeat until the string is empty)
+
+
+   analyze short chunks (substrings) of the string one at a time:
+      //for all checks below, return false if they are false (marked with *)
+      //for all checks below, check if the length of the remaining string is sufficiently long to complete the current state forecast before analyzing the chunk (marked with **)
+      //return false if the length remaining is insufficient
+
+      **
+      check whether first two positions of string isValidStateCode
+      *
+      cut the first two characters of the string
+      **
+      check whether the next (first of remaining) character is a digit 
+*
+      cut the first (or first two if the 2nd character is also a digit) character(s) of the string
+
+      **
+      check whether the next character is an alphabet
+      *
+      cut the first character of the string
+    
+    (go back to start of loop)
+   }
+   
+return true (the program successfully passed all the checks)
+}
+
+
+
+then I created
+countVotes(string pollData, char party, int& voteCount){
+
+    takes in a poll data string, a character indicating party of interest, and an int reference (the no. of votes output will be output to this integer variable)
+    //returns certain numbers for different errors/a success case
+    
+    save voteCount’s initial value
+    set voteCount to 0
+    check if pollData has correct syntax (using hasCorrectSyntax()); reset the voteCount and return 1 if not
+    check if the party character is an alphabet; reset the voteCount and return 3 if not
+    
+    repeatedly:{
+        (repeat until pollData is empty)
+        cut first two characters of pollData
+        cut out the digit(s) (one or two) that are the first (two) characters of the remaining pollData
+convert it/them to int using myStoi function (I now realize i need an int to string converter)
+	if this int (no. of votes) is 0, 
+	reset the voteCount to its initial value and 
+	return 2
+	cut out digits from pollData
+	check the next character (first character of remaining pollData); if this character matches the party character ignoring case, then 
+	add the no. of votes for this iteration of the loop (state forecast) to voteCount (voteCount acts as a running total)
+	cut out the first character of remaining pollData
+	(go back to start of loop)
+	}
+    
+	return 0  
+	(the program finishes successfully: the initial pollData has correct syntax; the character party is a character; there are no 0 vote states, total votes for the party of interest have been set into voteCount)
+}
+
+realizing I need an int to string converter, I implemented the myStoi function (‘s’ for string, ‘to’ for to, ‘i’ for int)
+myStoi(string input)
+	takes in an input string
+	repeatedly:
+		multiply digits processed by 10 and 
+		add the next character minus the 0 character (yielding the actual integer value of that digit) to the digits processed 
+	return the processed digits (an int)
+
+c) Test Data:
+
+for hasCorrectSyntax(string pollData):
+format: pollData, description and/or reason
+"TX38R", proper and only one forecast, also has both one-digit and two-digit votes; test if true case works
+"TX38RCA55DMs6rnY29dUT06L", proper and kinda long (5 forecasts), also has both one-digit and two-digit votes; test if true case works
+"CA52DTX38RCA3D", two of same state (CA); just for fun/see what happens (since we do not have to deal with this case properly)
+"TX38RCA55DMs6rnY29dUT06L ", test for not proper (space at the end)
+"TX38RCA55DMs6r nY29dUT06L", test for not proper (space between state forecasts)
+"TX38R CA55D Ms6r nY29d UT06L", test for not proper (space between all state forecasts)
+"TX38RCA55DMs6rnY29dUT006L", test for not proper (three digit vote)
+"TX38RCA55DMs6rnY29dUT06", test for not proper (end early--without party character at the end)
+"TX38RCA55DMs6rnY29dUx06L", test for not proper (Ux is not a valid state code)
+"TX38RCA55DMs6rnY29dU06L", test for not proper (U (actually U0) is not a valid state code)
+
+for countVotes(string pollData, char party, int& voteCount):
+FOR EACH OF THE POLLDATAs LISTED ABOVE (in hasCorrectSyntax() section) TEST WITH THESE PARTIES AND VOTECOUNTS:
+	format: party, value of voteCount when passed in, reasoning
+	'R', 0, simple working case with parties that are 'R'
+	'A', 0, simple working case but without parties that are 'A'
+	'A', 10, make sure the voteCount value is SET to total votes for party 'A' (as opposed to 10+total votes)
+	'0', 10, test for when party is not alpha
+	97, 10, test for when party is alpha ('a') but written as number
+	0, 10, test for when party is not alpha but written as number
+

@@ -1,0 +1,211 @@
+Obstacle overcame:
+Array indexes and using for loop carefully in an array that has its elements moved over the for loop
+Making sure to have the -1 return for every function when wrong values are input
+
+Format of test cases   //note: cases where n> array's meaningful size are not tested as spec says not to worry about them
+Function declaration;
+declaration&instantiation of variables;
+(arg1, arg2, arg3, ..., argN) [reason]
+declaration&instantiation of variables (assume this is in diff. function as previous test);
+(arg1, arg2, arg3, ..., argN) [reason]
+... etc
+
+int appendToAll(string a[], int n, string value);
+string people[5] = { "hillary", "gary", "donald", "jill", "evan" };
+(people, 5, "!!!") [normal case, with all terms manipulated]
+string people[5] = { "hillary", "gary", "donald", "jill", "evan" };
+(people, 4, "lol") [normal case, with less than all terms manipulated, diff. value appended now]
+string people[5] = { "hillary", "gary", "donald", "jill", "evan" };
+string appended = "3";
+(people, 4, appended) [normal case, with less than all terms manipulated, now with variable appended]
+string people[5] = { "hillary", "gary", "donald", "jill", "evan" };
+(people, -1, "!!!") [n is not valid]
+string people[5] = { "hillary", "gary", "donald", "jill", "evan" };
+(people, 0, "!!!") [valid case, n is 0]
+string people[5] = { "hillary", "gary", "donald", "jill", "evan" };
+(people, 0, 2) [invalid value]
+string people[6] = { "hillary", "gary", "donald", "jill", "evan" };
+int x = 5;
+(people, x, "l@*_-+==##$l") [variable is passed in for n, value has funny characters]
+string people[6] = { "hillary", "gary", "donald", "jill", "evan" };
+(people, 6, "l@*_-+==##$l") [goes up to a garbage value]
+
+
+int lookup(const string a[], int n, string target); 
+string people[5] = { "hillary", "gary", "donald", "jill", "evan" };
+(people, 5, "evan") [normal case]
+string people[5] = { "hillary", "gary", "donald", "jill", "evan" };
+(people, 5, "Evan") [check case-sensitivity]
+string people[5] = { "hillary", "gary", "donald", "jill", "evan" };
+(people, 5, "") [empty string target case]
+string people[5] = { "hillary", "gary", "donald", "jill", "evan" };
+(people, 5, "evans") [can't be found case]
+string people[5] = { "hillary", "gary", "donald", "jill", "evan" };
+(people, 4, "evan") [can't be found because n is too small case]
+string people[5] = { "hillary", "gary", "donald", "jill", "evan" };
+(people, -3, gary) [invalid n input]
+string people[5] = { "hillary", "gary", "donald", "jill", "evan" };
+(people, -1, gary) [invalid n input]
+string people[5] = { "hillary", "gary", "donald", "jill", "evan" };
+(people, 0, "") [n is 0 case, no error; just empty array, so even "" cannot be found]
+
+
+int positionOfMax(const string a[], int n); 
+string people[5] = { "hillary", "gary", "donald", "jill", "evan" };
+(people, 0) [n is 0, so return -1]
+string people[5] = { "hillary", "gary", "donald", "jill", "evan" };
+(people, 0) [n is -1, so return -1]
+string people[5] = { "hillary", "gary", "donald", "jill", "evan" };
+(people, 1) [works when there is no check needed]
+string people[5] = { "hillary", "gary", "donald", "jill", "evan" };
+(people, 5) [normal case]
+string people[5] = { "evan", "gary", "donald", "jill", "evan" };
+(people, 5) [two are same]
+string people[6] = { "tim", "gary", "tim", "donald", "jill", "evan" };
+(people, 6) [two maxes are same]
+string people[6] = { "Tim", "gary", "tim", "donald", "jill", "evan" };
+(people, 6) [caps vs no caps]
+string people[6] = { "Tim", "gary", "jim", "donald", "jill", "evan" };
+(people, 6) [caps vs no caps; different words]
+string people[6] = { "tim", "tim", "tim", "tim", "jill", "evan" };
+(people, 6) [more maxes are same]
+
+int rotateLeft(string a[], int n, int pos); 
+string running[5] = { "evan", "donald", "gary", "jill", "hillary" };
+(running, 5, 0) [full array case]
+string running[5] = { "evan", "donald", "gary", "jill", "hillary" };
+(running, 4, 1) [less full array case]
+string running[5] = { "evan", "donald", "gary", "jill", "hillary" };
+(running, 0, 0) [no element array case]
+string running[5] = { "evan", "donald", "gary", "jill", "hillary" };
+(running, 0, 1) [pos > n case]
+string running[5] = { "evan", "donald", "gary", "jill", "hillary" };
+(running, 1, 1) [pos == n case]
+string running[5] = { "evan", "donald", "gary", "jill", "hillary" };
+(running, -1, -2) [n is negative, pos is negative]
+string running[5] = { "evan", "donald", "gary", "jill", "hillary" };
+(running, 1, -2) [pos is negative]
+string running[5] = { "evan", "donald", "gary", "jill", "hillary" };
+(running, -1, 2) [n is negative]
+
+int countRuns(const string a[], int n); 
+string d[9] = {
+    "tim", "ajamu", "mike", "mike", "donald", "donald", "donald", "mike", "mike"
+};
+(d, -5) [n is negative]
+string d[9] = {
+    "tim", "ajamu", "mike", "mike", "donald", "donald", "donald", "mike", "mike"
+};
+(d, 0) [n is 0]
+string d[9] = {
+    "tim", "ajamu", "mike", "mike", "donald", "donald", "donald", "mike", "mike"
+};
+(d, 9) [normal case]
+string d[9] = {
+    "tim", "ajamu", "mike", "donald", "mike"
+};
+(d, 5) [no runs > length 1 case]
+string d[9] = {
+    "tim", "ajamu", "", "mike", "donald", "donald", "donald", "mike", "mike"
+};
+(d, 9) [has "" case]
+string mike = "mike";
+string d[9] = {
+    "tim", "ajamu", mike, "mike", "donald", "donald", "donald", "mike", "mike"
+};
+(d, 9) [has variable inside case]
+string mike = "notMike";
+string d[9] = {
+    "tim", "ajamu", mike, "mike", "donald", "donald", "donald", "mike", "mike"
+};
+(d, 9) [has variable inside case, where mike != "mike"]
+
+
+int flip(string a[], int n); 
+string folks[6] = { "ajamu", "mike", "", "tim", "mindy", "bill" };
+(folks, -1) [n is negative]
+string folks[6] = { "ajamu", "mike", "", "tim", "mindy", "bill" };
+(folks, 0) [n is 0]
+string folks[6] = { "ajamu", "mike", "", "tim", "mindy", "bill" };
+(folks, 4) [valid]
+string folks[6] = { "ajamu", "mike", "", "tim", "mindy", "bill" };
+(folks, 6) [valid and complete]
+
+int differ(const string a1[], int n1, const string a2[], int n2); 
+string folks[6] = { "ajamu", "mike", "", "tim", "mindy", "bill" };
+string group[5] = { "ajamu", "mike", "bill", "", "tim" };
+(folks, 6, group, 5) [normal]
+string folks[6] = { "ajamu", "mike", "", "tim", "mindy", "bill" };
+string group[5] = { "ajamu", "mike", "bill", "", "tim" };
+(folks, 2, group, 1) [ends before explicit difference is found]
+string folks[5] = { "ajamu", "mike", "", "tim", "mindy" };
+string group[5] = { "ajamu", "mike", "", "tim", "mindy" };
+(folks, 5, group, 5) [no difference]
+string group[5] = { "ajamu", "mike", "", "tim", "mindy" };
+(group, 5, group, 5) [no difference at all]
+string group[5] = { "ajamu", "mike", "", "tim", "mindy" };
+(group, 5, group, -1) [negative n2]
+string group[5] = { "ajamu", "mike", "", "tim", "mindy" };
+(group, -2, group, 5) [negative n1]
+string group[5] = { "ajamu", "mike", "", "tim", "mindy" };
+(group, -2, group, -2) [negative both even though same]
+
+int subsequence(const string a1[], int n1, const string a2[], int n2); 
+string names[10] = { "evan", "hillary", "mindy", "jill", "ajamu", "gary" };
+string names1[10] = { "hillary", "mindy", "jill" };
+(names, 6, names1, 3) [subsequence appears]
+string names[10] = { "evan", "hillary", "mindy", "jill", "ajamu", "gary" };
+string names2[10] = { "evan", "jill" };
+(names, 5, names2, 2) [subsequence does not appear]
+string names[10] = { "evan", "hillary", "mindy", "jill", "ajamu", "gary" };
+string names2[10] = { "evan", "hillary", "mindy", "jill", "ajamu", "gary" };
+(names, 5, names2, 6) [n2>n1]
+string names[10] = { "evan", "hillary", "mindy", "jill", "ajamu", "gary" };
+string names2[10] = { "evan", "hillary", "mindy", "jill", "ajamu", "gary" };
+(names, 6, names2, 6) [n2==n1, subsequence appears]
+string names[10] = { "evan", "hillary", "mindy", "jill", "ajamu", "gary" };
+string names2[10] = { "evan", "hillary", "mindy", "jill", "ajamu", "gary" };
+(names, 6, names2, 0) [interesting part of a2 is empty, subsequence appears]
+string names[10] = { "evan", "hillary", "mindy", "jill", "ajamu", "gary" };
+string names2[10] = { "evan", "hillary", "mindy", "jill", "ajamu", "gary" };
+(names, 6, names2, -2) [n2 is negative]
+string names2[10] = { "evan", "hillary", "mindy", "jill", "ajamu", "gary" };
+(names,-3, names2, 6) [n1 is negative]
+
+int lookupAny(const string a1[], int n1, const string a2[], int n2);
+string names[10] = { "evan", "hillary", "mindy", "jill", "ajamu", "gary" };
+string set1[10] = { "bill", "ajamu", "jill", "hillary" };
+(names, 6, set1, 4) [a1 has "hillary" there]
+string names[10] = { "evan", "hillary", "mindy", "jill", "ajamu", "gary" };
+string set2[10] = { "Jill", "donald" };
+(names, 6, set2, 2) [a1 has none; "Jill" has capital 'J']
+string names[10] = { "evan", "hillary", "mindy", "jill", "ajamu", "gary" };
+string set2[10] = { "tim", "donald" };
+(names, 6, set2, 0) [a1 has none (interesting a2 is empty)]
+string names[10] = { "evan", "hillary", "", "jill", "ajamu", "gary" };
+string set2[10] = { "", "donald" };
+(names, 6, set2, 1) [a1 has "" there]
+string names[10] = { "evan", "hillary", "", "jill", "ajamu", "gary" };
+string set2[10] = { "", "donald" };
+(names, -2, set2, 2) [n1 is negative]
+string names[10] = { "evan", "hillary", "", "jill", "ajamu", "gary" };
+string set2[10] = { "", "donald" };
+(names, 2, set2, -3) [n2 is negative]
+string names[10] = { "evan", "hillary", "", "jill", "ajamu", "gary" };
+string set2[10] = { "", "donald" };
+(names, -2, set2, -3) [both are negative]
+
+int separate(string a[], int n, string separator); 
+string cand[6] = { "donald", "jill", "hillary", "tim", "evan", "bill" };
+(cand, 6, "gary");  ["gary" is not in array]
+string cand[6] = { "donald", "jill", "hillary", "tim", "evan", "bill" };
+(cand, 6, "hillary");  ["hillary" is in array]
+string cand[6] = { "donald", "jill", "hillary", "tim", "evan", "bill" };
+(cand, 6, "@");  [all > "@" (flips array)]
+string cand[6] = { "donald", "jill", "hillary", "tim", "evan", "bill" };
+(cand, 6, "@");  [all > "z" (does nothing)]
+string cand[6] = { "donald", "jill", "hillary", "tim", "evan", "bill" };
+(cand, 4, "hillary");  [not full; "hillary" is still in array]
+string cand[6] = { "donald", "jill", "hillary", "tim", "evan", "bill" };
+(cand, -2, "hillary");  [n is negative]
+

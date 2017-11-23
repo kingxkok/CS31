@@ -1,0 +1,175 @@
+1. 
+//this line is not printed
+endlendl
+grendel
+//this line is not printed
+
+2. Program prints a triangle.
+More detail: Program prints a 45 degree right triangle made of the pound sign of side length side.
+
+3. 
+#include <iostream>
+using namespace std;
+
+	int main()
+	{
+	    int side;
+
+	    cout << "Enter a number: ";
+	    cin >> side;
+	 
+	    int j;
+	 
+	    for (int i = 0; i < side; i++)
+	    {
+	        j=i;
+	        while(j>=0){
+	            cout << "#";
+	            j--;
+	        }
+	        cout << "\n";
+	    }   
+	}
+
+4.
+#include <iostream>
+using namespace std;
+
+	int main()
+	{
+	    int side;
+
+	    cout << "Enter a number: ";
+	    cin >> side;
+	 
+	    int j;
+	    int i = 0;
+	    
+	    if(side>0){
+	       do
+	        {
+	        j=i;
+	        while(j>=0){
+	            cout << "#";
+	            j--;
+	        }
+	        cout << "\n";
+	        i++;
+	        }   
+	       while(i<side);
+	   }
+	   
+	}
+
+
+
+5.
+	switch(codeSection){
+	       case 281:
+	       {
+	            cout << "bigamy";
+	            break;
+	       }
+	  
+	       case 321:
+	       case 322:
+	       {
+	           cout << "selling illegal lottery tickets";
+	           break;
+	       }
+	       
+	       case 383:
+	       {
+	           cout << "selling rancid butter";
+	           break;
+	       }
+	       
+	       case 598: 
+	       {
+	           cout << "wounding a bird in a public cemetery";
+	           break;
+	       }
+	       
+	       default:
+	       {
+	           cout << "some other crime";
+	           break;
+	       }
+	       
+	   }
+
+//answer to 5. ends here
+
+/////////////////////////////////////////////////
+//code to check 5  //if it prints all 1s then it's correct :D
+////////////////////////////////////////////////
+
+#include <iostream>
+	using namespace std;
+	#include <string>
+
+	int main()
+	{
+	    string a;
+	    string b;
+	    
+	  for (int codeSection = 270; codeSection < 610; codeSection++)
+	  {
+	    
+	    if (codeSection == 281)
+		a = "bigamy";
+	else if (codeSection == 321  ||  codeSection == 322)
+		a = "selling illegal lottery tickets";
+	else if (codeSection == 383)
+		a = "selling rancid butter";
+	else if (codeSection == 598)
+		a = "wounding a bird in a public cemetery";
+	else
+		a = "some other crime";
+	    
+	    
+	   switch(codeSection){
+	       case 281:
+	       {
+	            b = "bigamy";
+	            break;
+	       }
+	  
+	       case 321:
+	       case 322:
+	       {
+	           b = "selling illegal lottery tickets";
+	           break;
+	       }
+	       
+	       case 383:
+	       {
+	           b = "selling rancid butter";
+	           break;
+	       }
+	       
+	       case 598: 
+	       {
+	           b = "wounding a bird in a public cemetery";
+	           break;
+	       }
+	       
+	       default:
+	       {
+	           b = "some other crime";
+	           break;
+	       }
+	       
+	   }
+	   bool boolean = a==b;
+	   cout << boolean;
+	   
+	  
+	  }
+	   
+	}
+
+
+
+
+

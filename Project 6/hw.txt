@@ -1,0 +1,384 @@
+1.
+a)
+
+Original:
+
+
+int main()
+   {
+       int arr[3] = { 5, 10, 15 };
+       int* ptr = arr;
+
+
+       *ptr = 30;          // set arr[0] to 30
+       *ptr + 1 = 20;      // set arr[1] to 20 //not really since *ptr + 1 is not a variable *(ptr+1) is
+       ptr += 2;
+       ptr[0] = 10;        // set arr[2] to 10
+
+
+       while (ptr >= arr)  //Starts printing from high to low
+       {
+           ptr--;  //Decrements ptr before printing last index’s value
+           cout << *ptr << endl;    // print values
+       }
+   }
+
+
+
+Fixed:
+
+int main()
+   {
+       int arr[3] = { 5, 10, 15 };
+       int* ptr = arr;
+
+
+       *ptr = 10;          // set arr[0] to 10 not 30
+       *(ptr + 1) = 20;      // set arr[1] to 20
+       ptr += 2;
+       ptr[0] = 30;        // set arr[2] to 30 not 10
+
+
+       while (ptr >= arr)
+       {
+           cout << *ptr << endl;    // print values
+       ptr--;
+       }
+   }
+
+
+
+
+
+
+
+b)
+
+Original:
+
+void findMax(int arr[], int n, int* pToMax) //pToMax is passed by value
+   {
+       if (n <= 0) 
+           return;      // no items, no maximum!
+   
+       pToMax = arr;
+
+       for (int i = 1; i < n; i++)
+       {
+           if (arr[i] > *pToMax)
+                pToMax = arr + i;
+       }
+   }       
+
+   int main()
+   {
+       int nums[4] = { 5, 3, 15, 6 };
+       int* ptr;
+
+       findMax(nums, 4, ptr);
+       cout << "The maximum is at address " << ptr << endl;
+       cout << "It's at position " << ptr - nums << endl;
+       cout << "Its value is " << *ptr << endl;
+   }
+
+
+//Pointer is passed by value so ptr in main is never changed
+
+
+Fixed: 
+
+void findMax(int arr[], int n, int*& pToMax) //now passed by reference
+   {
+       if (n <= 0) 
+           return;      // no items, no maximum!
+   
+       pToMax = arr;
+
+       for (int i = 1; i < n; i++)
+       {
+           if (arr[i] > *pToMax)
+                pToMax = arr + i;
+       }
+   }     
+
+
+
+
+
+
+
+c)
+
+
+Original:
+
+
+  void computeCube(int n, int* ncubed)
+   {
+       *ncubed = n * n * n;
+   }
+
+   int main()
+   {
+       int* ptr; //ptr is not initialized, may point to memory that cannot be accessed
+       computeCube(5, ptr);
+       cout << "Five cubed is " << *ptr << endl;
+   }
+//ptr is not initialized, may point to memory that cannot be accessed
+
+
+Fixed:
+
+   int main()
+   {
+       int pointed;
+       int* ptr = &pointed;
+       computeCube(5, ptr);
+       cout << "Five cubed is " << *ptr << endl;
+   }
+
+
+
+
+
+
+d)
+
+Original:
+
+   // return true if two C strings are equal
+    bool strequal(const char str1[], const char str2[])
+    {
+        while (str1 != 0  &&  str2 != 0)
+        {
+            if (str1 != str2)  // compare corresponding characters //actually compares pointers
+                return false;
+            str1++;            // advance to the next character
+            str2++;
+        }
+        return str1 == str2;   // both ended at same time? //compares pointers
+    }
+
+    int main()
+    {
+        char a[15] = "Zhao";
+        char b[15] = "Zhou";
+
+        if (strequal(a,b))
+            cout << "They're the same person!\n";
+    }
+
+//if str1 and str2 do not contain the null termination byte, the loop may go on until inaccessible memory
+//but let's assume the 0-byte is always there, so that we need not change the main routine
+//it is also nice to put '\0' instead of 0 to make it clear that we are looking for the 0-byte that ends c-strings
+//MAIN PROBLEM: str1 & str2 are pointers so comparing them with == or != means to ask: 
+//"Do these pointers point to the same memory address?" 
+//which only returns true if str1 and str2 are the same cstrings, not just have the same text
+//additionally, the function goes into infinite loop the str1 and str2 point to the same cstring, 
+//as the pointers never == 0
+
+Fixed:
+
+ bool strequal(const char str1[], const char str2[])
+    {
+        while (*str1 != '\0'  &&  *str2 != '\0')
+        {
+            if (*str1 != *str2)  // compare corresponding characters
+                return false;
+            str1++;            // advance to the next character
+            str2++;
+        }
+        return *str1 == *str2;   // both ended at same time? 
+    }
+
+
+
+
+
+e)
+it attempts to use arrays lovally declared in other functions in the main function; this is undefined behavior.
+
+
+
+
+
+
+
+
+
+
+
+
+2.
+a) double* cat;
+b) double mouse[5];
+c) cat = mouse+4;
+d) *cat = 25;
+e) *(mouse + 3) = 42;
+f) cat -= 3;
+g) cat[1] = 54;
+h) cat[0] = 17;
+i) bool b = *cat==*(cat+1);
+j) bool d = cat==mouse;
+
+
+
+
+
+
+
+
+3.
+
+a)
+
+ double mean(const double* scores, int numScores)
+    {
+        const double* ptr = scores;
+        double tot = 0;
+	int k = 0; //increment k and use ptr+k like using ptr sub k
+        while (ptr+k != scores + numScores)
+        {
+            tot += *(ptr+k);
+            k++;
+        }
+        return tot/numScores;
+    }
+
+
+
+
+b)
+
+    // This function searches through str for the character chr.
+    // If the chr is found, it returns a pointer into str where
+    // the character was first found, otherwise nullptr (not found).
+
+    const char* findTheChar(const char* str, char chr)
+    {
+        for (int k = 0; *(str+k) != 0; k++)
+            if ( *(str+k) == chr)
+                return str+k;
+
+        return nullptr;
+    }
+
+
+
+c)
+
+    // This function searches through str for the character chr.
+    // If the chr is found, it returns a pointer into str where
+    // the character was first found, otherwise nullptr (not found).
+
+    const char* findTheChar(const char* str, char chr)
+    {
+        for (; *str != 0; str++)
+            if ( *str == chr)
+                return str;
+
+        return nullptr;
+    }
+
+
+
+
+
+
+
+
+
+4.
+    #include <iostream>
+    using namespace std;
+
+    int* maxwell(int* a, int* b)
+    {
+        if (*a > *b)
+            return a;
+        else
+            return b;
+    }
+
+    void swap1(int* a, int* b) //does nothing as pointers are passed by value
+    {
+        int* temp = a;
+        a = b;
+        b = temp;
+    }
+
+    void swap2(int* a, int* b) //swaps the values of the ints a and b point to
+    {
+        int temp = *a;	//stores orignal value of address a points to
+        *a = *b;	//sets value of int at address a points to value of int b points to
+        *b = temp;	//sets value of int at address b points to original value of the int a points to
+    }
+
+    int main()
+    {
+        int array[6] = { 5, 3, 4, 17, 22, 19 };
+
+        int* ptr = maxwell(array, &array[2]);   //ptr = array
+        *ptr = -1; 				//set array[0] = -1
+        ptr += 2;				//ptr = array[2]
+        ptr[1] = 9; 				//array[3] = 9
+        *(array+1) = 79; 			//array[1] = 79
+
+        cout << &array[5] - ptr << endl; 	
+	//array[5] is stored 3 doubles after ptr (which == array[2]), so   3 and newline   is printed
+
+        swap1(&array[0], &array[1]);		//does nothing (see comment beside function signature)
+        swap2(array, &array[2]); 		//switches array[2] and array[0] so array[0] = 4, array[2] = -1
+
+        for (int i = 0; i < 6; i++)
+            cout << array[i] << endl;		//prints   4 79 -1 9 22 19 and newline 
+						//(w/ new lines instead of spaces between the numbers)
+    } 						//because, to summarize the actions above, the array has become
+						// {4, 79, -1, 9, 22, 19} as [3] was set to 9, [1] was set to 79, 
+						// [0] was set to -1 
+						// but later swapped with [2] so [0] became 4 and [2] became -1
+
+Prints:
+3
+4
+79
+-1
+9
+22
+19
+
+Explanation in comments throughout the code
+
+
+
+
+
+
+
+
+
+
+5.
+
+void removeS(char* chrptr){
+	char* localptr = chrptr;
+	for( ; *localptr != '\0'; localptr++){
+		*chrptr = *localptr;
+		if(*localptr != 's' && *localptr != 'S')
+			chrptr++;
+	} 
+	*chrptr = *localptr;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,33 @@
+Overcame:
+1. Forgot how to do rounding to 3 decimal places the way professor did it, so I
+Looked up on stackoverflow and got the #include <iomanip> way
+2. getline() didn't work at first, then I realized 
+I had to #include <string>
+3. Reading the tech spec carefully to get info on what to do with invalid inputs
+esp. making sure the "---\n" always prints (almost forgot to do that)
+
+List of test cases:
+01. Valid UAE/Turkey revenue<20M (Trains, 19, UAE)
+02. Valid non-UAE/Turkey revenue<20M (Trains, 19, Yoyo)
+03. Valid UAE/Turkey revenue==20M (Trains, 20, UAE)
+04. Valid non-UAE/Turkey revenue==20M (Trains, 20, Yoyo)
+05. Valid UAE/Turkey 20M<revenue<50M (Train, 25, UAE)
+06. Valid non-UAE/Turkey 20M<revenue<50M (Train, 25, Yoyo)
+07. Valid UAE/Turkey revenue==50M (Train, 50, Turkey)
+08. Valid non-UAE/Turkey revenue==50M, country with space(Train, 50, Smallberg Town)
+09. Valid non-UAE/Turkey revenue==50M, country with space, name with space and special characters and number start (2Wow! Tr@1n, 50, Smallberg Town)
+10. Valid UAE revenue>50M, country is numerical, name is numerical (234, 234, 234)
+11. Invalid revenue is non-numerical *not handled since instruction says no need to* (lol, lol, lol)
+Outputs:
+Identification: lol
+Expected revenue (in millions): lol
+Country: You must enter a country.
+12. Invalid empty identification (, 234, USA)
+13. Invalid empty revenue is impossible as adding whitespace/new lines doesn't advance the program
+14. Invalid empty country name (lol, 234, ) //space isn't entered
+15. Invalid empty identification and country (, 234, ) //see above
+16. Valid id and country are spaces (    , 234,    ) //instruction says we don't need to deal with this specially
+
+
+
+
